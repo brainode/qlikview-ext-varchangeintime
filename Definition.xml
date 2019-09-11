@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionObject Label="VarChangerInTimesOfDay" Description="Change variable in date time" PageHeight="100000">
+    <Text Label="VarName" Initial="" Expression=""/> 
+    <Text Label="2 VarValues" Initial="" Expression=""/> 
+    <Text Label="2 HoursToChange" Initial="" Expression=""/>
+</ExtensionObject>
