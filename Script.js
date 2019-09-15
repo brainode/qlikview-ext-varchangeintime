@@ -24,29 +24,36 @@ function init(){
         var varName = this.Layout.Text0.text;
         var varValues = this.Layout.Text1.text.split(',');
         var varTimeEdges = this.Layout.Text2.text.split(',');
-        if(!root[keepSessionVar]){
-            root[keepSessionVar]= setInterval(function() { 
+        if(!root.varchangeintimeSessionHandle){
+            root.varchangeintimeSessionHandle= setInterval(function() { 
                qvDoc.SetVariable("sessionHandleVar",1);
             }, sessionTime);
         }
-        if(!root[nowTimestamp]){
-         var timeEdges = "10:00,18:00";
-         var times = timeEdges.split(',');
+        if(!root.varchangeintime){
          var nowDate = new Date();
-         var closestEdge = 0;
-         var firstReloadDate = new Date(nowDate.getFullYear(),nowDate.getMonth(),nowDate.getDate(),times[0].split(':')[0],times[0].split(':')[1]);
-         var secondReloadDate = new Date(nowDate.getFullYear(),nowDate.getMonth(),nowDate.getDate(),times[1].split(':')[0],times[1].split(':')[1]);
+         var division = 0;
+         var firstReloadDate = new Date(nowDate.getFullYear(),nowDate.getMonth(),nowDate.getDate(),varTimeEdges[0].split(':')[0],varTimeEdges[0].split(':')[1]);
+         var secondReloadDate = new Date(nowDate.getFullYear(),nowDate.getMonth(),nowDate.getDate(),varTimeEdges[1].split(':')[0],varTimeEdges[1].split(':')[1]);
          var firstSubstr = firstReloadDate - nowDate;
          var secondSubstr = secondReloadDate - nowDate;
-         if(firstSubstr>0){
-            closestEdge=1;
-         }else{
-            
-         }
-         root[keepSessionVar] = {varname:varName,values:varValues,timeEdges:varTimeEdges,timer:null};
-            root[keepSessionVar]= setInterval(function() { 
+         var substrSignSum = Math.sign(firstSubstr)+Math.sign(secondSubstr);
+         switch (substrSignSum) {
+            case 2:
+               division = firstSubstr;
+               break;
+            case 0:
+               division = secondSubstr;
+               break;
+            case -2:
+               division = firstReloadDate.setDate(firstReloadDate.getDate() + 1) - nowDate;
+               break;
+            default:
+               break;
+          }
+         root.varchangeintime = {varname:varName,values:varValues,timeEdges:varTimeEdges,timer:null};
+         root.varchangeintime = setInterval(function() { 
                qvDoc.SetVariable("sessionHandleVar",1);
-            }, sessionTime);
+         }, division);
         }
          
    });
